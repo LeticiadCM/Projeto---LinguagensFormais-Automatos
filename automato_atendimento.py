@@ -1,59 +1,45 @@
-#Definições do automato
-estados = ["Cheia", "Moderada", "Vazia"]
-alfabeto = ["Rapido", "Normal", "Demorado"]
-alfabeto_pontos = {"Rapido": 1, "Normal": 2, "Demorado": 5}
+import random
+
+# Definições do automato
+alfabeto = ["Facil", "Moderado", "Dificil"]
+alfabeto_pontos = {"Facil": 1, "Moderado": 2, "Dificil": 3}
 estado_atual = {"Fila_1": 0, "Fila_2": 0, "Fila_3": 0}
 
-#Rápido: 1 ponto
-#Normal: 2 pontos
-#Demorado: 5 pontos
+# Atendimento Fácil: 1 ponto
+# Atendimento Moderado: 2 pontos
+# Atendimento Difícil: 3 pontos
 
-#função que vai sempre escolher a fila com menor pontuação
-def escolher_fila():
+# Estabelece condições de parada, visando o estado final
+def filas_equivalentes():
+    atendimentos = [estado_atual[fila] for fila in estado_atual]
+    return len(set(atendimentos)) == 1 and all(pontuacao != 0 for pontuacao in atendimentos)
 
-    fila_menor_pont = min(estado_atual, key = estado_atual.get)
-    return fila_menor_pont
+# Mostra o estado atual das filas
+def output_estado():    
+    for fila, pontos in estado_atual.items():
+        print(f"{fila} está com {pontos} pontos")
 
-#atualiza o estado conforme a pontuação
-def atualizar_estado(fila):
-
-    pontos_estado = estado_atual[fila]
-
-    if pontos_estado <= 0:
-        return "Vazia"
-    elif 1 <= pontos_estado <= 5:
-        return "Moderada"
-    elif pontos_estado >= 6: 
-        return "Cheia"
-
-def output_estado():
-
-    for fila, pontos_estado in estado_atual.items():
-
-        estado = atualizar_estado(fila)
-        print(f"{fila} está {estado}")
-
-#Mostra o estado incial em que as filas estão vazias
+# Mostra o estado inicial das filas
 print("Estado inicial das filas: \n")
 output_estado()
 
-for tipo_atendimento in alfabeto:
+# Enquanto as condições não são satisfeitas, o laço é executado
+while not filas_equivalentes():
 
-    if tipo_atendimento not in alfabeto:
-        print("Tipo de atendimento inválido")
-        continue
+    # Faz com que os tipos de atendimentos entrem de forma aleatória
+    random.shuffle(alfabeto) 
 
-    #escolhe a melhor fila do atendimento atual
-    fila_atual = escolher_fila()
+    for tipo_atendimento in alfabeto:
 
-    #adiciona pontos do alfabeto à fila escolhido
-    estado_atual[fila_atual] += alfabeto_pontos[tipo_atendimento]
+        # Direciona o atendimento para a fila com menor pontuação
+        fila_atual = min(estado_atual, key = estado_atual.get)
+        estado_atual[fila_atual] += alfabeto_pontos[tipo_atendimento]        
+        
+        print(f"Atendimento '{tipo_atendimento}' direcionado para a fila:\n")
+        output_estado()
+        print("=====================================\n")
 
-    print("\n Atualização das filas de atendimento: \n")
-    output_estado()
-    print("===================================== \n")
-
-print("Estado atual após a atualização das filas:")
-print(estado_atual)
-
+# Mostra o estado final das filas
+print("Estado final das filas")
+output_estado()
 
