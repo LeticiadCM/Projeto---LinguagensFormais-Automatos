@@ -1,4 +1,7 @@
+import os
 from automathon import DFA
+
+os.environ["PATH"] += os.pathsep + r'C:\Program Files\Graphviz\bin'
 
 Q = {'000', '100','200', '300', '110', '120', '130', '220', '230', '330', '112', '113', '122', '123', '133', '223', '233'}
 sigma = {'1', '2', '3'}
@@ -28,4 +31,5 @@ F = {'000'}
 
 automata = DFA(Q, sigma, delta, initial_state, F)
 
+# Visualiza o autômato
 automata.view("afd")
